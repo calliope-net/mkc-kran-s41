@@ -15,10 +15,30 @@ namespace kran { // kran.ts
     //% block="beim Start Funkgruppe %funkgruppe" 
     //% funkgruppe.min=0 funkgruppe.max=255 funkgruppe.defl=239
     export function beimStart(funkgruppe: number) {
-
         radio.beimStart(funkgruppe)
     }
 
+    // ========== wenn Text empfangen (Bluetooth Status zurück senden)
+
+    let n_receivedString = ""
+    let n_receivedStringChanged = false
+
+    radio.onReceivedString(function (receivedString) {
+        n_receivedStringChanged = n_receivedString != receivedString
+        if (n_receivedStringChanged) {
+            n_receivedString = receivedString
+        }
+    })
+
+
+
+    //% group="Kran Status"
+    //% block="Kran Status Änderung" weight=4
+    export function receivedStringChanged() { return n_receivedStringChanged }
+
+    //% group="Kran Status"
+    //% block="Kran Status Text" weight=3
+    export function receivedString() { return n_receivedString.substr(2) }
 
 
 

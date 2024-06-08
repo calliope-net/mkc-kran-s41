@@ -25,6 +25,8 @@ namespace kran { // multiswitch.ts
             n_Status = eStatus.fehler
             return false // i2c Fehler
         } else {
+            n_Status_changed = false // wird nur bei Änderung true
+
             let bu = pins.i2cReadBuffer(i2cgroveMultiswitch_x03, 10)
             // Byte 0-3: 32 Bit UInt32LE; Byte 4:Schalter 1 ... Byte 9:Schalter 6
             // Byte 4-9: 00000001:Schalter OFF; 00000001:Schalter ON; Bit 1-7 löschen & 0x01
@@ -33,31 +35,24 @@ namespace kran { // multiswitch.ts
 
                     switch (iSwitch) {
                         case eStatus.links: { // 2
-                            //n_Status_changed = n_Magnet
-                            //if (n_Magnet) {
-                            //  n_Status_changed = true
+                            n_Status_changed = n_Magnet
                             n_Magnet = false
-                            //}
-                            break
+                            break // beendet switch, nicht for
                         }
                         case eStatus.rechts: { // 4
-                            //n_Status_changed = !n_Magnet
-                            //if (!n_Magnet) {
-                            // n_Status_changed = true
+                            n_Status_changed = !n_Magnet
                             n_Magnet = true
-                            //}
-                            break
+                            break // beendet switch, nicht for
                         }
                         default: { // 1 3 5
                             n_Status_changed = (n_Status != iSwitch)
                             n_Status = iSwitch // n_Status nur bei 1..5 ändern (Schalter gedrückt); nicht ändern bei 0 (losgelassen)
-                            return true//   break
+                            break // beendet switch, nicht for
                         }
                     }
-
-                }
+                    break // beendet for wenn der erste von 5 Schaltern gedrückt
+                } // else { } // for geht weiter zum nächsten Schalter
             }
-            n_Status_changed = false
             return true
         }
     }
