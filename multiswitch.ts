@@ -13,9 +13,9 @@ namespace kran { // multiswitch.ts
         fehler = 0
     }
 
-    let n_Status = eStatus.fehler
     let n_Status_changed = true
-
+    let n_Status = eStatus.fehler
+    let n_Magnet = false
 
     //% group="Status"
     //% block="Schalter einlesen" weight=8
@@ -30,10 +30,34 @@ namespace kran { // multiswitch.ts
             // Byte 4-9: 00000001:Schalter OFF; 00000001:Schalter ON; Bit 1-7 löschen & 0x01
             for (let iSwitch = 1; iSwitch <= 5; iSwitch += 1) { // Richtung N = 1, W = 2, S = 3, O = 4, M = 5
                 if (bu[3 + iSwitch] == 0) { // ON=00000000 OFF=00000001
-                    n_Status_changed = (n_Status != iSwitch)
-                    n_Status = iSwitch // n_Status nur bei 1..5 ändern (Schalter gedrückt); nicht ändern bei 0 (losgelassen)
+
+                    switch (iSwitch) {
+                        case eStatus.links: { // 2
+                            //n_Status_changed = n_Magnet
+                            //if (n_Magnet) {
+                            //  n_Status_changed = true
+                            n_Magnet = false
+                            //}
+                            break
+                        }
+                        case eStatus.rechts: { // 4
+                            //n_Status_changed = !n_Magnet
+                            //if (!n_Magnet) {
+                            // n_Status_changed = true
+                            n_Magnet = true
+                            //}
+                            break
+                        }
+                        default: { // 1 3 5
+                            n_Status_changed = (n_Status != iSwitch)
+                            n_Status = iSwitch // n_Status nur bei 1..5 ändern (Schalter gedrückt); nicht ändern bei 0 (losgelassen)
+                            return true//   break
+                        }
+                    }
+
                 }
             }
+            n_Status_changed = false
             return true
         }
     }
@@ -43,7 +67,6 @@ namespace kran { // multiswitch.ts
     //% block="Status Änderung" weight=6
     export function chStatus(): boolean { return n_Status_changed }
 
-
     //% group="Status"
     //% block="Status %pStatus" weight=5
     export function isStatus(pStatus: eStatus): boolean { return pStatus == n_Status }
@@ -51,6 +74,10 @@ namespace kran { // multiswitch.ts
     //% group="Status"
     //% block="Status" weight=4
     export function getStatus(): eStatus { return n_Status }
+
+    //% group="Status"
+    //% block="Magnet" weight=3
+    export function getMagnet(): boolean { return n_Magnet }
 
 
 
