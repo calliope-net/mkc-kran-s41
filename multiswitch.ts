@@ -5,9 +5,12 @@ namespace kran { // multiswitch.ts
     const i2c_CMD_GET_DEV_EVENT = 0x01	// gets device event status
 
     export enum eStatus {
+        //% block="Fahren und Lenken"
         fahren = 5,
+        //% block="Seilrolle und Drehkranz"
         drehen = 1,
-        seil = 3,
+        //% block="Zahnstange und Drehkranz"
+        zahnstange = 3,
         links = 2,
         rechts = 4,
         fehler = 0
