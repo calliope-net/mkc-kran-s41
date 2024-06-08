@@ -1,50 +1,57 @@
 
 namespace kran { // multiswitch.ts
 
-    export enum eADDR { DIP_x03 = 0x03, DIP_SWITCH_x03 = 0x03 } // i2c Adressen
+    const i2cgroveMultiswitch_x03 = 0x03
+    const i2c_CMD_GET_DEV_EVENT = 0x01	// gets device event status
 
-    export enum eRegister {
-        I2C_CMD_GET_DEV_ID = 0x00,      // gets device ID information
-        I2C_CMD_GET_DEV_EVENT = 0x01,	// gets device event status
-        I2C_CMD_EVENT_DET_MODE = 0x02,	// enable button event detect mode
-        I2C_CMD_BLOCK_DET_MODE = 0x03,	// enable button block detect mode
-        I2C_CMD_AUTO_SLEEP_ON = 0xb2,	// enable device auto sleep mode
-        I2C_CMD_AUTO_SLEEP_OFF = 0xb3,	// disable device auto sleep mode (default mode)
-        I2C_CMD_SET_ADDR = 0xc0,	    // sets device i2c address
-        I2C_CMD_RST_ADDR = 0xc1,    	// resets device i2c address
-        I2C_CMD_TEST_TX_RX_ON = 0xe0,	// enable TX RX pin test mode
-        I2C_CMD_TEST_TX_RX_OFF = 0xe1,	// disable TX RX pin test mode
-        I2C_CMD_TEST_GET_VER = 0xe2,	// use to get software version
-        I2C_CMD_GET_DEVICE_UID = 0xf1	// use to get chip id
+    export enum eStatus {
+        fahren = 5,
+        drehen = 1,
+        seil = 3,
+        links = 2,
+        rechts = 4,
+        fehler = 0
     }
-    export enum eSwitch {
-        DIP1 = 1, DIP2 = 2, DIP3 = 3, DIP4 = 4, DIP5 = 5, DIP6 = 6,
-        N = 1, W = 2, S = 3, O = 4, M = 5
-    }
-    export enum eONOFF { ON = 0, OFF = 1 } // Schalter aus wenn Bit 0 = 1
+
+    let n_Status = eStatus.fehler
+    let n_Status_changed = true
 
 
-
-    //% group="Schalter auslesen aus Array"
-    //% block="Schalter %pSwitch %pONOFF aus Array" weight=8
-    export function getON(pSwitch: eSwitch, pONOFF: eONOFF): boolean {
-        if (pins.i2cWriteBuffer(eADDR.DIP_x03, Buffer.fromArray([eRegister.I2C_CMD_GET_DEV_EVENT])) == 0) {
-            let n_Buffer = pins.i2cReadBuffer(eADDR.DIP_x03, 10)
-            if (n_Buffer != null && n_Buffer.length >= 10) {
-                return (n_Buffer.getUint8(pSwitch + 3) & 0x01) == pONOFF // ON=0 OFF=1
-            } else { return false }
+    //% group="Status"
+    //% block="Schalter einlesen" weight=8
+    export function readSwitch(): boolean {
+        if (pins.i2cWriteBuffer(i2cgroveMultiswitch_x03, Buffer.fromArray([i2c_CMD_GET_DEV_EVENT])) != 0) {
+            n_Status_changed = (n_Status != eStatus.fehler)
+            n_Status = eStatus.fehler
+            return false // i2c Fehler
         } else {
-            return false
+            let bu = pins.i2cReadBuffer(i2cgroveMultiswitch_x03, 10)
+            // Byte 0-3: 32 Bit UInt32LE; Byte 4:Schalter 1 ... Byte 9:Schalter 6
+            // Byte 4-9: 00000001:Schalter OFF; 00000001:Schalter ON; Bit 1-7 löschen & 0x01
+            for (let iSwitch = 1; iSwitch <= 5; iSwitch += 1) { // Richtung N = 1, W = 2, S = 3, O = 4, M = 5
+                if (bu[3 + iSwitch] == 0) { // ON=00000000 OFF=00000001
+                    n_Status_changed = (n_Status != iSwitch)
+                    n_Status = iSwitch // n_Status nur bei 1..5 ändern (Schalter gedrückt); nicht ändern bei 0 (losgelassen)
+                }
+            }
+            return true
         }
     }
 
-    //% group="Schalter auslesen aus Array"
-    //% block="erster Schalter, der ON ist, (1-6;0) aus Array" weight=6
-    export function getNumber() {
-        for (let iSwitch = eSwitch.DIP1; iSwitch <= eSwitch.DIP6; iSwitch += 1) {
-            if (getON(iSwitch, eONOFF.ON)) { return iSwitch }
-        }
-        return 0
-    }
+
+    //% group="Status"
+    //% block="Status Änderung" weight=6
+    export function chStatus(): boolean { return n_Status_changed }
+
+
+    //% group="Status"
+    //% block="Status %pStatus" weight=5
+    export function isStatus(pStatus: eStatus): boolean { return pStatus == n_Status }
+
+    //% group="Status"
+    //% block="Status" weight=4
+    export function getStatus(): eStatus { return n_Status }
+
+
 
 } // multiswitch.ts
