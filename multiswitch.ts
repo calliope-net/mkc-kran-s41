@@ -13,11 +13,12 @@ namespace kran { // multiswitch.ts
         fehler = 0
     }
 
+    let n_rgb = basic.rgb(7, 7, 7)
     let n_Status_changed = true
     let n_Status = eStatus.fehler
     let n_Magnet = false
 
-    //% group="Status"
+    //% group="Schalter"
     //% block="Schalter einlesen" weight=8
     export function readSwitch(): boolean {
         if (pins.i2cWriteBuffer(i2cgroveMultiswitch_x03, Buffer.fromArray([i2c_CMD_GET_DEV_EVENT])) != 0) {
@@ -58,22 +59,30 @@ namespace kran { // multiswitch.ts
     }
 
 
-    //% group="Status"
-    //% block="Status Änderung" weight=6
-    export function chStatus(): boolean { return n_Status_changed }
+    //% group="Schalter"
+    //% block="Schalter Änderung" weight=6
+    export function chSwitch(): boolean {
+        if (n_Magnet)
+            n_rgb = basic.rgb(7, 0, 0)
+        else
+            n_rgb = basic.rgb(0, 7, 0)
+        return n_Status_changed
+    }
 
-    //% group="Status"
-    //% block="Status %pStatus" weight=5
-    export function isStatus(pStatus: eStatus): boolean { return pStatus == n_Status }
+    //% group="Schalter"
+    //% block="Schalter %pStatus" weight=5
+    export function isSwitch(pStatus: eStatus): boolean { return pStatus == n_Status }
 
-    //% group="Status"
-    //% block="Status" weight=4
-    export function getStatus(): eStatus { return n_Status }
+    //% group="Schalter"
+    //% block="Schalter" weight=4
+    export function getSwitch(): eStatus { return n_Status }
 
-    //% group="Status"
+    //% group="Schalter"
     //% block="Magnet" weight=3
-    export function getMagnet(): boolean { return n_Magnet }
+    export function getMagnet() { return n_Magnet }
 
-
+    //% group="Schalter"
+    //% block="RGB" weight=3
+    export function getRGB() { return n_rgb }
 
 } // multiswitch.ts
