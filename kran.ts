@@ -32,11 +32,13 @@ namespace kran { // kran.ts
 
 
 
-    //% group="Kran Status"
+    // ========== group="Kran Status" subcategory="Status empfangen"
+
+    //% group="Bluetooth" subcategory="Status empfangen"
     //% block="Kran Status Änderung" weight=4
     export function receivedStringChanged() { return n_receivedStringChanged }
 
-    //% group="Kran Status"
+    //% group="Bluetooth" subcategory="Status empfangen"
     //% block="Kran Status Text" weight=3
     export function receivedString() { return n_receivedString.substr(2) }
 
