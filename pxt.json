@@ -10,7 +10,8 @@
         "main.blocks",
         "main.ts",
         "README.md",
-        "kran.ts"
+        "kran.ts",
+        "multiswitch.ts"
     ],
     "testFiles": [
         "test.ts"
