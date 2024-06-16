@@ -1,8 +1,8 @@
 
-//% color=#7F003F icon="\uf0d1" block="Kran" weight=06
+//% color=#7F003F icon="\uf0d1" block="Kran Sender" weight=06
 namespace kran { // kran.ts
 
-    const n_Simulator: boolean = ("€".charCodeAt(0) == 8364) // true, wenn der Code im Simulator läuft
+   // const n_Simulator: boolean = ("€".charCodeAt(0) == 8364) // true, wenn der Code im Simulator läuft
 
 
 

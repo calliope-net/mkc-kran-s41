@@ -1,22 +1,34 @@
+input.onButtonEvent(Button.AB, ButtonEvent.LongClick, function () {
+    sendReset = true
+})
 function status_anzeigen () {
-    if (kran.chSwitch()) {
-        basic.showNumber(kran.getSwitch())
+    if (radio.chSwitch()) {
+        basic.showNumber(radio.getSwitch())
     }
-    if (kran.receivedStringChanged()) {
-        lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 1, 0, 15, lcd16x2rgb.lcd16x2_text(kran.receivedString()))
+    if (radio.receivedStringChanged()) {
+        lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 1, 0, 15, lcd16x2rgb.lcd16x2_text(radio.receivedStringText()))
     }
 }
-if (!(kran.simulator())) {
-    kran.beimStart(239)
+function rgb_anzeigen () {
+    if (radio.getMagnet()) {
+        basic.setLedColor(0xff0000)
+    } else {
+        basic.setLedColor(0x0000ff)
+    }
+}
+let sendReset = false
+if (!(radio.simulator())) {
+    radio.beimStart(239)
     lcd16x2rgb.initLCD(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E))
+    sendReset = false
 }
 loops.everyInterval(400, function () {
-    basic.setLedColor(kran.getRGB())
-    if (kran.readSwitch() && radio.joystickQwiic()) {
+    rgb_anzeigen()
+    if (radio.readSwitch() && radio.joystickQwiic()) {
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 0, 0, 3, radio.joystickValue(radio.eJoystickValue.motor, 5))
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 0, 4, 7, radio.joystickValue(radio.eJoystickValue.servo16, 5))
     }
-    if (!(kran.isSwitch(kran.eStatus.fehler))) {
+    if (!(radio.isSwitch(radio.eStatus.fehler))) {
         radio.fill_sendBuffer19()
         radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
         if (kran.isSwitch(kran.eStatus.fahren)) {
@@ -34,7 +46,11 @@ loops.everyInterval(400, function () {
             radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mc, true)
             radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mb, true)
         }
-        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, input.buttonIsPressed(Button.B))
+        if (sendReset) {
+            sendReset = false
+            radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b7, true)
+        }
+        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b1, kran.getMagnet())
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b6, true)
         radio.sendData(radio.radio_sendBuffer19())
