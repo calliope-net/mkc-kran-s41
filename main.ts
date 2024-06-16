@@ -10,9 +10,9 @@ function status_anzeigen () {
 }
 function rgb_anzeigen () {
     if (radio.getMagnet()) {
-        basic.setLedColor(0xff0000)
+        basic.setLedColor(basic.rgb(0, 7, 0))
     } else {
-        basic.setLedColor(0x0000ff)
+        basic.setLedColor(basic.rgb(0, 0, 7))
     }
 }
 if (!(radio.simulator())) {
