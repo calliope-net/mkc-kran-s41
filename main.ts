@@ -31,16 +31,16 @@ loops.everyInterval(400, function () {
     if (!(radio.isSwitch(radio.eStatus.fehler))) {
         radio.fill_sendBuffer19()
         radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
-        if (kran.isSwitch(kran.eStatus.fahren)) {
+        if (radio.isSwitch(radio.eStatus.fahren)) {
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.motor, 5))
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, radio.joystickValue(radio.eJoystickValue.servo16, 5, 10))
             radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.m0, true)
-        } else if (kran.isSwitch(kran.eStatus.drehen)) {
+        } else if (radio.isSwitch(radio.eStatus.drehen)) {
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.ma, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.motor, 5))
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.ymotor, 5))
             radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.ma, true)
             radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mb, true)
-        } else if (kran.isSwitch(kran.eStatus.zahnstange)) {
+        } else if (radio.isSwitch(radio.eStatus.zahnstange)) {
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mc, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.motor, 5))
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.ymotor, 5))
             radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mc, true)
@@ -51,7 +51,7 @@ loops.everyInterval(400, function () {
             radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b7, true)
         }
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
-        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b1, kran.getMagnet())
+        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b1, radio.getMagnet())
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b6, true)
         radio.sendData(radio.radio_sendBuffer19())
     }
