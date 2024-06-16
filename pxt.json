@@ -9,9 +9,7 @@
     "files": [
         "main.blocks",
         "main.ts",
-        "README.md",
-        "kran.ts",
-        "multiswitch.ts"
+        "README.md"
     ],
     "testFiles": [
         "test.ts"
