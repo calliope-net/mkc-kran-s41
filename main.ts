@@ -26,8 +26,16 @@ loops.everyInterval(400, function () {
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 0, 0, 3, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 0, 4, 7, radio.joystickValue(radio.eJoystickValue.servo16, 5))
     }
-    radio.i2cReadSwitch()
-    if (!(radio.isSwitch(radio.eStatus.nicht_angeschlossen))) {
+    if (radio.isSwitch(radio.eStatus.nicht_angeschlossen) && radio.buttonOnOff()) {
+        radio.fill_sendBuffer19()
+        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
+        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
+        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, radio.joystickValue(radio.eJoystickValue.servo16, 5, 10))
+        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.m0, true)
+        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
+        radio.sendData(radio.radio_sendBuffer19())
+    } else {
+        radio.i2cReadSwitch()
         radio.fill_sendBuffer19()
         radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
         if (radio.isSwitch(radio.eStatus.fahren)) {
