@@ -9,16 +9,12 @@ function status_anzeigen () {
     }
 }
 function rgb_anzeigen () {
-    if (radio.buttonStatus(true)) {
-        bJoystick = !(bJoystick)
-    }
     if (radio.getMagnet()) {
         basic.setLedColor(basic.rgb(0, 7, 0))
     } else {
         basic.setLedColor(basic.rgb(0, 0, 7))
     }
 }
-let bJoystick = false
 if (!(radio.simulator())) {
     radio.beimStart(239, true)
     radio.enableButtonSendReset(true)
@@ -26,11 +22,12 @@ if (!(radio.simulator())) {
 }
 loops.everyInterval(400, function () {
     rgb_anzeigen()
-    if (radio.readSwitch() && radio.joystickQwiic()) {
+    if (radio.joystickQwiic()) {
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 0, 0, 3, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 0, 4, 7, radio.joystickValue(radio.eJoystickValue.servo16, 5))
     }
-    if (!(radio.isSwitch(radio.eStatus.fehler))) {
+    radio.i2cReadSwitch()
+    if (!(radio.isSwitch(radio.eStatus.nicht_angeschlossen))) {
         radio.fill_sendBuffer19()
         radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
         if (radio.isSwitch(radio.eStatus.fahren)) {
