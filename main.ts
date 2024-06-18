@@ -34,7 +34,7 @@ loops.everyInterval(400, function () {
         radio.sendData(radio.radio_sendBuffer19())
     } else if (radio.i2cReadSwitch()) {
         radio.fill_sendBuffer19()
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p3)
+        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
         if (radio.isSwitch(radio.eStatus.fahren)) {
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, radio.joystickValue(radio.eJoystickValue.servo16, 5, 10))
