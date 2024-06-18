@@ -1,5 +1,4 @@
 function status_anzeigen () {
-    radio.zeigeStatus5x5()
     if (radio.receivedStringChanged()) {
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 1, 0, 15, lcd16x2rgb.lcd16x2_text(radio.receivedStringText()))
     }
@@ -35,7 +34,7 @@ loops.everyInterval(400, function () {
         radio.sendData(radio.radio_sendBuffer19())
     } else if (radio.i2cReadSwitch()) {
         radio.fill_sendBuffer19()
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
+        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p3)
         if (radio.isSwitch(radio.eStatus.fahren)) {
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
             radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, radio.joystickValue(radio.eJoystickValue.servo16, 5, 10))
@@ -56,6 +55,7 @@ loops.everyInterval(400, function () {
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b6, true)
         radio.sendData(radio.radio_sendBuffer19())
     }
+    radio.zeige5x5Status(radio.radio_sendBuffer19())
     status_anzeigen()
     basic.turnRgbLedOff()
 })
