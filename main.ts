@@ -26,22 +26,24 @@ loops.everyInterval(400, function () {
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 0, 8, 15, radio.joystickButtonOn())
     }
     if (radio.isSwitch(radio.eStatus.nicht_angeschlossen) && radio.joystickButtonOn()) {
-        radio.fill_sendBuffer19()
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
-        radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, radio.joystickValue(radio.eJoystickValue.servo16, 5, 10))
-        radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.m0, true)
-        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
-        radio.sendData(radio.radio_sendBuffer19())
+        if (!(radio.getGabelstapler())) {
+            radio.fill_sendBuffer19()
+            radio.sendM0(radio.radio_sendBuffer19(), 5, 10)
+            radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
+            radio.sendData(radio.radio_sendBuffer19())
+        } else {
+            radio.fill_sendBuffer19()
+            radio.sendM01(radio.radio_sendBuffer19(), 5, 60)
+            radio.sendData(radio.radio_sendBuffer19())
+        }
     } else if (radio.i2cReadSwitch()) {
         radio.fill_sendBuffer19()
-        radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
         if (radio.isSwitch(radio.eStatus.fahren)) {
-            radio.sendM0(radio.radio_sendBuffer19(), 0, 10)
+            radio.sendM0(radio.radio_sendBuffer19(), 5, 10)
         } else if (radio.isSwitch(radio.eStatus.seilrolle)) {
             radio.sendMAB(radio.radio_sendBuffer19(), 5)
         } else if (radio.isSwitch(radio.eStatus.zahnstange)) {
-            radio.sendMCB(radio.radio_sendBuffer19())
+            radio.sendMCB(radio.radio_sendBuffer19(), 5)
         }
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b1, radio.getMagnet())
