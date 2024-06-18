@@ -37,19 +37,11 @@ loops.everyInterval(400, function () {
         radio.fill_sendBuffer19()
         radio.setBetriebsart(radio.radio_sendBuffer19(), radio.e0Betriebsart.p0)
         if (radio.isSwitch(radio.eStatus.fahren)) {
-            radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
-            radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.m0, radio.eBufferOffset.b1_Servo, radio.joystickValue(radio.eJoystickValue.servo16, 5, 10))
-            radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.m0, true)
+            radio.sendM0(radio.radio_sendBuffer19(), 0, 10)
         } else if (radio.isSwitch(radio.eStatus.seilrolle)) {
-            radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.ma, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
-            radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.ymotor, 5))
-            radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.ma, true)
-            radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mb, true)
+            radio.sendMAB(radio.radio_sendBuffer19(), 5)
         } else if (radio.isSwitch(radio.eStatus.zahnstange)) {
-            radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mc, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.xmotor, 5))
-            radio.setByte(radio.radio_sendBuffer19(), radio.eBufferPointer.mb, radio.eBufferOffset.b0_Motor, radio.joystickValue(radio.eJoystickValue.ymotor, 5))
-            radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mc, true)
-            radio.setaktiviert(radio.radio_sendBuffer19(), radio.e3aktiviert.mb, true)
+            radio.sendMCB(radio.radio_sendBuffer19())
         }
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b1, radio.getMagnet())
