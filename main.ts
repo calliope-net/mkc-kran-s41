@@ -1,6 +1,6 @@
 function status_anzeigen () {
-    if (radio.receivedStringChanged()) {
-        lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 1, 0, 15, lcd16x2rgb.lcd16x2_text(radio.receivedStringText()))
+    if (sender.receivedStringChanged()) {
+        lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 1, 0, 15, lcd16x2rgb.lcd16x2_text(sender.receivedStringText()))
     }
 }
 function rgb_anzeigen () {
