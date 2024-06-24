@@ -4,7 +4,7 @@ function status_anzeigen () {
     }
 }
 function rgb_anzeigen () {
-    if (radio.getMagnet()) {
+    if (sender.getMagnet()) {
         basic.setLedColor(basic.rgb(7, 0, 0))
     } else if (sender.joystickButtonOn()) {
         basic.setLedColor(basic.rgb(0, 0, 7))
@@ -36,17 +36,17 @@ loops.everyInterval(400, function () {
             sender.sendM01(radio.radio_sendBuffer19(), 5, 60)
             radio.sendData(radio.radio_sendBuffer19())
         }
-    } else if (radio.i2cReadSwitch()) {
+    } else if (sender.i2cReadSwitch()) {
         radio.fill_sendBuffer19()
-        if (radio.isSwitch(radio.eStatus.fahren)) {
+        if (sender.isSwitch(sender.eStatus.fahren)) {
             sender.sendM0(radio.radio_sendBuffer19(), 5, 10)
-        } else if (radio.isSwitch(radio.eStatus.seilrolle)) {
+        } else if (sender.isSwitch(sender.eStatus.seilrolle)) {
             sender.sendMAB(radio.radio_sendBuffer19(), 5)
-        } else if (radio.isSwitch(radio.eStatus.zahnstange)) {
+        } else if (sender.isSwitch(sender.eStatus.zahnstange)) {
             sender.sendMCB(radio.radio_sendBuffer19(), 5)
         }
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b0, !(input.buttonIsPressed(Button.A)) && input.buttonIsPressed(Button.B))
-        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b1, radio.getMagnet())
+        radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b1, sender.getMagnet())
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b6, true)
         radio.sendData(radio.radio_sendBuffer19())
     }
