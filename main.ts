@@ -13,7 +13,7 @@ function rgb_anzeigen () {
     }
 }
 if (!(radio.simulator())) {
-    sender.beimStart()
+    sender.beimStart(175)
     sender.enableButtonSendReset(true)
     sender.enableButtonMotor1(true)
     lcd16x2rgb.initLCD(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E))
