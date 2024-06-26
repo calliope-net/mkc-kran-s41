@@ -3,6 +3,12 @@ function status_anzeigen () {
         lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 1, 0, 15, lcd16x2rgb.lcd16x2_text(sender.receivedStringText()))
     }
 }
+input.onButtonEvent(Button.A, ButtonEvent.Hold, function () {
+    storage.putNumber(StorageSlots.s1, radio.getFunkgruppe(-1))
+})
+input.onButtonEvent(Button.B, ButtonEvent.Hold, function () {
+    storage.putNumber(StorageSlots.s1, radio.getFunkgruppe(1))
+})
 function rgb_anzeigen () {
     if (sender.getMagnet()) {
         basic.setLedColor(basic.rgb(7, 0, 0))
@@ -13,11 +19,12 @@ function rgb_anzeigen () {
     }
 }
 if (!(radio.simulator())) {
-    sender.beimStart(175)
-    sender.enableButtonSendReset(true)
-    sender.enableButtonMotor1(true)
-    lcd16x2rgb.initLCD(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E))
+    sender.beimStart(storage.getNumber(StorageSlots.s1))
 }
+sender.enableButtonSendReset(true)
+sender.enableButtonMotor1(true)
+lcd16x2rgb.initLCD(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E))
+storage.putNumber(StorageSlots.s1, radio.getFunkgruppe(0))
 loops.everyInterval(400, function () {
     rgb_anzeigen()
     if (sender.joystickQwiic()) {
