@@ -50,7 +50,8 @@ loops.everyInterval(400, function () {
         radio.setSchalter(radio.radio_sendBuffer19(), radio.e0Schalter.b6, true)
         radio.sendData(radio.radio_sendBuffer19())
     }
-    radio.zeige5x5Status(radio.radio_sendBuffer19())
+    radio.zeige5x5Buffer(radio.radio_sendBuffer19())
+    radio.zeige5x5Joystick(radio.radio_sendBuffer19())
     status_anzeigen()
     basic.turnRgbLedOff()
 })
