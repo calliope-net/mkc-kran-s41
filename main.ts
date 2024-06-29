@@ -1,8 +1,3 @@
-function status_anzeigen () {
-    if (sender.receivedStringChanged()) {
-        lcd16x2rgb.writeText(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E), 1, 0, 15, lcd16x2rgb.lcd16x2_text(sender.receivedStringText()))
-    }
-}
 input.onButtonEvent(Button.A, ButtonEvent.Hold, function () {
     storage.putNumber(StorageSlots.s1, radio.getFunkgruppe(-1))
 })
@@ -18,12 +13,7 @@ function rgb_anzeigen () {
         basic.setLedColor(basic.rgb(0, 7, 0))
     }
 }
-if (!(radio.simulator())) {
-    sender.beimStart(storage.getNumber(StorageSlots.s1))
-}
-sender.enableButtonSendReset(true)
-sender.enableButtonMotor1(true)
-lcd16x2rgb.initLCD(lcd16x2rgb.lcd16x2_eADDR(lcd16x2rgb.eADDR_LCD.LCD_16x2_x3E))
+sender.beimStart(storage.getNumber(StorageSlots.s1))
 storage.putNumber(StorageSlots.s1, radio.getFunkgruppe(0))
 loops.everyInterval(400, function () {
     rgb_anzeigen()
@@ -57,6 +47,5 @@ loops.everyInterval(400, function () {
     }
     radio.zeige5x5Buffer(radio.radio_sendBuffer19())
     radio.zeige5x5Joystick(radio.radio_sendBuffer19())
-    status_anzeigen()
     basic.turnRgbLedOff()
 })
